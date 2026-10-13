@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Piala Emas Yayasan Sarawak 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          darkgreen: '#123d2b',
+          lightgreen: '#1b7045',
+          gold: '#e9bd52',
+          panel: '#1a241e',
+          muted: '#aab8ad',
+          appblack: '#101612'
+        },
+        fontFamily: {
+          sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        }
+      }
+    }
+  }
+</script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+  
+  body {
+    background-color: theme('colors.appblack');
+    color: white;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  /* Custom Scrollbar for tables */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme('colors.panel'); 
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.lightgreen'); 
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.gold'); 
+  }
+
+  .glass-panel {
+    background: rgba(26, 36, 30, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(233, 189, 82, 0.1);
+  }
+
+  .nav-btn.active {
+    background-color: theme('colors.gold');
+    color: theme('colors.appblack');
+  }
+
+  /* Fade-in animation for tab switching */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+<header class="text-center py-8 px-4 bg-gradient-to-br from-[#092719] to-lightgreen border-b-4 border-gold shadow-lg relative overflow-hidden">
+  <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none"></div>
+  <div class="relative z-10">
+    <div class="text-5xl mb-2 drop-shadow-md">⚽ 🏆</div>
+    <h1 class="text-3xl md:text-5xl font-bold text-gold drop-shadow-md mb-2">PIALA EMAS 2026</h1>
+    <p class="tracking-widest text-sm md:text-base font-semibold text-white">REBUTAN YAYASAN SARAWAK</p>
+    <p class="mt-2 text-xs md:text-sm text-gray-300">KEJOHANAN BOLA SEPAK ANTARA SEKOLAH</p>
+  </div>
+</header>
+
+<nav class="sticky top-0 z-40 bg-panel border-b border-lightgreen/30 shadow-md">
+  <div class="max-w-6xl mx-auto px-2 py-3 flex flex-wrap justify-center gap-2">
+    <button onclick="go('utama')" class="nav-btn active px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">UTAMA</button>
+    <button onclick="go('live')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">LIVE SCORE</button>
+    <button onclick="go('jadual')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">JADUAL</button>
+    <button onclick="go('keputusan')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">KEPUTUSAN</button>
+    <button onclick="go('kedudukan')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">KEDUDUKAN</button>
+    <button onclick="go('admin')" class="nav-btn px-4 py-2 rounded-lg text-sm font-semibold text-white bg-darkgreen hover:bg-lightgreen transition-colors">ADMIN</button>
+  </div>
+</nav>
+
+<main class="flex-grow max-w-6xl w-full mx-auto p-4 md:p-6 pb-20">
+
+  <!-- TAB: Utama -->
+  <section id="utama" class="tab-content block fade-in">
+    <div class="mb-8">
+      <h2 class="text-2xl font-bold text-gold border-l-4 border-gold pl-3 mb-1">SELAMAT DATANG</h2>
+      <p class="text-muted text-sm">Portal keputusan dan perkembangan rasmi Piala Emas Yayasan Sarawak 2026.</p>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="glass-panel rounded-xl p-6 shadow-lg text-center transform hover:scale-105 transition-transform">
+        <div class="text-muted text-sm font-semibold mb-2">JUMLAH PERLAWANAN</div>
+        <h2 id="totalMatches" class="text-4xl font-bold text-white">0</h2>
+      </div>
+      <div class="glass-panel rounded-xl p-6 shadow-lg text-center transform hover:scale-105 transition-transform border border-green-500/30 bg-green-900/20">
+        <div class="text-green-400 text-sm font-semibold mb-2">PERLAWANAN LIVE</div>
+        <h2 id="liveCount" class="text-4xl font-bold text-green-400">0</h2>
+      </div>
+      <div class="glass-panel rounded-xl p-6 shadow-lg text-center transform hover:scale-105 transition-transform">
+        <div class="text-muted text-sm font-semibold mb-2">JUMLAH PASUKAN</div>
+        <h2 id="teamCount" class="text-4xl font-bold text-white">0</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB: Live -->
+  <section id="live" class="tab-content hidden fade-in">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-red-500 border-l-4 border-red-500 pl-3 mb-1 flex items-center gap-2">
+        <span class="animate-pulse">🔴</span> LIVE SCORE
+      </h2>
+      <p class="text-muted text-sm" id="liveSubtitle">Keputusan perlawanan yang sedang berlangsung.</p>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="liveMatches"></div>
+  </section>
+
+  <!-- TAB: Jadual -->
+  <section id="jadual" class="tab-content hidden fade-in">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gold border-l-4 border-gold pl-3 mb-1">📅 JADUAL PERLAWANAN</h2>
+    </div>
+    <div class="glass-panel rounded-xl overflow-hidden shadow-lg border border-lightgreen/30">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse whitespace-nowrap">
+          <thead>
+            <tr class="bg-darkgreen text-gold text-sm uppercase tracking-wider">
+              <th class="p-4 border-b border-lightgreen/50">Tarikh / Masa</th>
+              <th class="p-4 border-b border-lightgreen/50">Perlawanan</th>
+              <th class="p-4 border-b border-lightgreen/50 text-center">Kumpulan</th>
+              <th class="p-4 border-b border-lightgreen/50 text-center">Skor</th>
+              <th class="p-4 border-b border-lightgreen/50 text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody" class="divide-y divide-lightgreen/20 text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB: Keputusan -->
+  <section id="keputusan" class="tab-content hidden fade-in">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gold border-l-4 border-gold pl-3 mb-1">🏁 KEPUTUSAN PENUH</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6" id="finishedMatches"></div>
+  </section>
+
+  <!-- TAB: Kedudukan -->
+  <section id="kedudukan" class="tab-content hidden fade-in">
+    <div class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold text-gold border-l-4 border-gold pl-3 mb-1">📊 KEDUDUKAN KUMPULAN</h2>
+      </div>
+      <div class="w-full md:w-64">
+        <label class="block text-xs text-muted mb-1 font-semibold">PILIH KUMPULAN</label>
+        <select id="groupFilter" onchange="renderStandings()" class="w-full bg-appblack border border-lightgreen text-white p-2.5 rounded-lg focus:outline-none focus:border-gold">
+          <option value="Semua">Semua Kumpulan</option>
+        </select>
+      </div>
+    </div>
+    <div class="glass-panel rounded-xl overflow-hidden shadow-lg border border-lightgreen/30">
+      <div class="overflow-x-auto">
+        <table class="w-full text-center border-collapse whitespace-nowrap">
+          <thead>
+            <tr class="bg-darkgreen text-gold text-xs md:text-sm uppercase tracking-wider">
+              <th class="p-3 border-b border-lightgreen/50">#</th>
+              <th class="p-3 border-b border-lightgreen/50 text-left">Pasukan</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Perlawanan">P</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Menang">M</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Seri">S</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Kalah">K</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Jaringan">J</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Bolos">B</th>
+              <th class="p-3 border-b border-lightgreen/50" title="Beza Gol">BG</th>
+              <th class="p-3 border-b border-lightgreen/50 font-bold text-white">Mata</th>
+            </tr>
+          </thead>
+          <tbody id="standingsBody" class="divide-y divide-lightgreen/20 text-sm"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAB: Admin -->
+  <section id="admin" class="tab-content hidden fade-in">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gold border-l-4 border-gold pl-3 mb-1">🔐 ADMIN PANEL</h2>
+    </div>
+
+    <!-- Login Box -->
+    <div id="loginPanel" class="glass-panel max-w-md mx-auto rounded-xl p-8 shadow-xl mt-10 border border-lightgreen/30">
+      <h3 class="text-xl font-bold text-center mb-2">ADMIN LOGIN</h3>
+      <p class="text-center text-muted text-sm mb-6">Log masuk untuk mengurus data kejohanan.</p>
+      <div class="mb-4">
+        <label class="block text-xs text-muted mb-1 font-semibold">USERNAME</label>
+        <input id="username" autocomplete="username" placeholder="Masukkan username" class="w-full bg-appblack border border-lightgreen/50 text-white p-3 rounded-lg focus:outline-none focus:border-gold">
+      </div>
+      <div class="mb-6">
+        <label class="block text-xs text-muted mb-1 font-semibold">PASSWORD</label>
+        <input id="password" type="password" autocomplete="current-password" placeholder="Masukkan password" class="w-full bg-appblack border border-lightgreen/50 text-white p-3 rounded-lg focus:outline-none focus:border-gold">
+      </div>
+      <button onclick="login()" class="w-full bg-gold hover:bg-yellow-500 text-appblack font-bold py-3 rounded-lg transition-colors shadow-lg">LOG MASUK</button>
+      <p id="loginMessage" class="text-red-400 text-sm text-center mt-4"></p>
+    </div>
+
+    <!-- Admin Tools -->
+    <div id="adminPanel" class="hidden space-y-6">
+      <div class="bg-yellow-900/30 border border-yellow-600 text-yellow-200 p-4 rounded-xl text-sm flex items-start gap-3">
+        <span class="text-xl">⚠️</span>
+        <p>Anda berada dalam mod pengurusan demo. Data disimpan secara lokal (localStorage) dan tidak dikongsi dengan peranti awam lain.</p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <button onclick="logout()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors shadow-md">LOG KELUAR</button>
+        <button onclick="exportData()" class="bg-lightgreen hover:bg-green-600 text-white px-4 py-2 rounded-lg font-bold text-sm transition-colors shadow-md">EKSPORT DATA (JSON)</button>
+        <button onclick="document.getElementById('importFile').click()" class="bg-gold hover:bg-yellow-500 text-appblack px-4 py-2 rounded-lg font-bold text-sm transition-colors shadow-md">IMPORT DATA</button>
+        <input id="importFile" class="hidden" type="file" accept=".json,application/json" onchange="importData(event)">
+      </div>
+
+      <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        
+        <!-- Add Team -->
+        <div class="glass-panel p-6 rounded-xl border border-lightgreen/30">
+          <h3 class="text-lg font-bold text-gold mb-4 border-b border-lightgreen/30 pb-2">➕ Tambah Pasukan</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-xs text-muted mb-1">Nama pasukan</label>
+              <input id="newTeam" placeholder="Cth: SMK Belaga" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg focus:border-gold outline-none">
+            </div>
+            <div>
+              <label class="block text-xs text-muted mb-1">Kumpulan</label>
+              <input id="newGroup" placeholder="Cth: A" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg focus:border-gold outline-none">
+            </div>
+          </div>
+          <button onclick="addTeam()" class="bg-lightgreen hover:bg-green-600 text-white w-full py-2 rounded-lg font-bold transition-colors">TAMBAH PASUKAN</button>
+        </div>
+
+        <!-- Announcement -->
+        <div class="glass-panel p-6 rounded-xl border border-lightgreen/30">
+          <h3 class="text-lg font-bold text-gold mb-4 border-b border-lightgreen/30 pb-2">📝 Pengumuman Awam</h3>
+          <div class="mb-4">
+            <label class="block text-xs text-muted mb-1">Mesej pengumuman (Tampil di muka depan)</label>
+            <input id="announcement" placeholder="Cth: Perlawanan ditangguhkan akibat hujan" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg focus:border-gold outline-none">
+          </div>
+          <button onclick="saveAnnouncement()" class="bg-lightgreen hover:bg-green-600 text-white w-full py-2 rounded-lg font-bold transition-colors mb-3">SIMPAN PENGUMUMAN</button>
+          <div class="text-sm text-muted bg-appblack/50 p-3 rounded-lg border border-lightgreen/20">
+            <strong>Aktual:</strong> <span id="announcementDisplay"></span>
+          </div>
+        </div>
+
+        <!-- Add Match -->
+        <div class="glass-panel p-6 rounded-xl border border-lightgreen/30 xl:col-span-2">
+          <h3 class="text-lg font-bold text-gold mb-4 border-b border-lightgreen/30 pb-2">⚽ Tambah Perlawanan</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+            <div>
+              <label class="block text-xs text-muted mb-1">Pasukan 1</label>
+              <select id="homeTeam" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-muted mb-1">Pasukan 2</label>
+              <select id="awayTeam" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold"></select>
+            </div>
+            <div>
+              <label class="block text-xs text-muted mb-1">Kumpulan</label>
+              <input id="matchGroup" placeholder="A" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold">
+            </div>
+            <div>
+              <label class="block text-xs text-muted mb-1">Tarikh & Masa</label>
+              <input id="matchDate" type="datetime-local" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold">
+            </div>
+            <div>
+              <label class="block text-xs text-muted mb-1">Lokasi Padang</label>
+              <input id="matchVenue" placeholder="Nama padang" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold">
+            </div>
+          </div>
+          <button onclick="addMatch()" class="bg-lightgreen hover:bg-green-600 text-white w-full py-2 rounded-lg font-bold transition-colors">TAMBAH PERLAWANAN</button>
+        </div>
+
+        <!-- Manage Score -->
+        <div class="glass-panel p-6 rounded-xl border border-lightgreen/30 xl:col-span-2">
+          <h3 class="text-lg font-bold text-gold mb-4 border-b border-lightgreen/30 pb-2">🎮 Urus Skor Perlawanan</h3>
+          <div class="mb-4">
+            <label class="block text-xs text-muted mb-1">Pilih Perlawanan untuk Disunting</label>
+            <select id="editMatch" onchange="loadMatchEditor()" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none focus:border-gold mb-4"></select>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-xs text-muted mb-1">Skor Pasukan 1</label>
+                <input id="editHomeScore" type="number" min="0" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none text-center font-bold text-xl">
+              </div>
+              <div>
+                <label class="block text-xs text-muted mb-1">Skor Pasukan 2</label>
+                <input id="editAwayScore" type="number" min="0" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none text-center font-bold text-xl">
+              </div>
+              <div>
+                <label class="block text-xs text-muted mb-1">Minit (Live)</label>
+                <input id="editMinute" type="number" min="0" placeholder="Cth: 67" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none text-center">
+              </div>
+              <div>
+                <label class="block text-xs text-muted mb-1">Status</label>
+                <select id="editStatus" class="w-full bg-appblack border border-lightgreen/50 text-white p-2.5 rounded-lg outline-none">
+                  <option value="Akan Bermula">Akan Bermula</option>
+                  <option value="LIVE">LIVE</option>
+                  <option value="Separuh Masa">Separuh Masa</option>
+                  <option value="Tamat">Tamat</option>
+                  <option value="Ditangguhkan">Ditangguhkan</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-3 mt-6">
+            <button onclick="saveScore()" class="flex-1 bg-gold hover:bg-yellow-500 text-appblack py-3 rounded-lg font-bold transition-colors">SIMPAN KEMASKINI</button>
+            <button onclick="deleteMatch()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-colors">PADAM PERLAWANAN</button>
+          </div>
+        </div>
+
+        <!-- Factory Reset -->
+        <div class="glass-panel p-6 rounded-xl border border-red-900/50 bg-red-900/10 xl:col-span-2">
+           <h3 class="text-lg font-bold text-red-500 mb-2">⚠️ Zon Bahaya</h3>
+           <p class="text-sm text-gray-400 mb-4">Tindakan ini akan memadam semua data (pasukan, perlawanan, dll) dari peranti ini. Pastikan anda telah membuat salinan Eksport (JSON) jika perlu.</p>
+           <button onclick="resetData()" class="bg-red-800 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-bold transition-colors border border-red-500">PADAM SEMUA DATA DEMO</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="mt-auto border-t border-lightgreen/30 bg-appblack py-8 text-center px-4">
+  <strong class="text-gold block mb-1">PIALA EMAS REBUTAN YAYASAN SARAWAK 2026</strong>
+  <p class="text-muted text-sm mb-2">KEJOHANAN BOLA SEPAK ANTARA SEKOLAH</p>
+  <p class="text-gray-500 text-xs">Hakcipta Terpelihara. Keputusan tertakluk kepada pengesahan pihak pengelola.</p>
+</footer>
+
+<!-- Custom Modal (Alert & Confirm Replacement) -->
+<div id="customModal" class="fixed inset-0 bg-black/80 hidden items-center justify-center z-50 p-4 opacity-0 transition-opacity duration-300">
+  <div class="bg-panel border-2 border-lightgreen p-6 rounded-xl max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-300" id="modalContent">
+    <h3 id="modalTitle" class="text-gold text-xl font-bold mb-3 flex items-center gap-2">
+      <span id="modalIcon">ℹ️</span> <span id="modalTitleText">Makluman</span>
+    </h3>
+    <p id="modalMessage" class="text-gray-200 mb-6 text-sm leading-relaxed"></p>
+    <div class="flex justify-end gap-3">
+      <button id="modalBtnCancel" class="hidden px-5 py-2.5 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold transition-colors text-sm">Batal</button>
+      <button id="modalBtnOk" class="px-5 py-2.5 bg-lightgreen hover:bg-green-600 text-white rounded-lg font-semibold transition-colors text-sm shadow-md">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const DB_KEY = "pialaEmas2026Data";
+
+const defaultData = {
+  teams: [],
+  matches: [],
+  announcement: ""
+};
+
+let data = loadData();
+let loggedIn = false;
+let confirmCallback = null;
+
+/* Custom Modal Functions to replace alert() and confirm() */
+function showModal(title, message, isConfirm, icon, onConfirm) {
+  const modal = document.getElementById('customModal');
+  const modalBox = document.getElementById('modalContent');
+  
+  document.getElementById('modalTitleText').textContent = title;
+  document.getElementById('modalMessage').textContent = message;
+  document.getElementById('modalIcon').textContent = icon;
+  
+  const cancelBtn = document.getElementById('modalBtnCancel');
+  if (isConfirm) {
+    cancelBtn.classList.remove('hidden');
+  } else {
+    cancelBtn.classList.add('hidden');
+  }
+  
+  confirmCallback = onConfirm || null;
+  
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+  // Trigger animations
+  setTimeout(() => {
+    modal.classList.remove('opacity-0');
+    modalBox.classList.remove('scale-95');
+  }, 10);
+}
+
+function closeModal() {
+  const modal = document.getElementById('customModal');
+  const modalBox = document.getElementById('modalContent');
+  
+  modal.classList.add('opacity-0');
+  modalBox.classList.add('scale-95');
+  setTimeout(() => {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+  }, 300);
+}
+
+document.getElementById('modalBtnOk').addEventListener('click', () => {
+  closeModal();
+  if (confirmCallback) confirmCallback();
+});
+
+document.getElementById('modalBtnCancel').addEventListener('click', () => {
+  closeModal();
+});
+
+function showAlert(message) {
+  showModal('Makluman', message, false, 'ℹ️', null);
+}
+
+function showConfirm(message, callback) {
+  showModal('Pengesahan', message, true, '⚠️', callback);
+}
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(DB_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && Array.isArray(parsed.teams) && Array.isArray(parsed.matches)) {
+        return parsed;
+      }
+    }
+  } catch (e) {}
+  return structuredClone(defaultData);
+}
+
+function persist() {
+  localStorage.setItem(DB_KEY, JSON.stringify(data));
+}
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;", "<":"&lt;", ">":"&gt;",
+    '"':"&quot;", "'":"&#39;"
+  })[c]);
+}
+
+function go(id) {
+  // Update Nav buttons visually
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active', 'bg-gold', 'text-appblack');
+    btn.classList.add('text-white', 'bg-darkgreen');
+  });
+  const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(btn => btn.getAttribute('onclick').includes(id));
+  if(activeBtn) {
+    activeBtn.classList.add('active', 'bg-gold', 'text-appblack');
+    activeBtn.classList.remove('text-white', 'bg-darkgreen');
+  }
+
+  // Hide all sections, show target
+  document.querySelectorAll('.tab-content').forEach(section => {
+    section.classList.add('hidden');
+    section.classList.remove('block');
+  });
+  
+  const target = document.getElementById(id);
+  if(target) {
+    target.classList.remove('hidden');
+    target.classList.add('block');
+    // Scroll to top to ensure clean view when switching tabs
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function login() {
+  const u = document.getElementById("username").value;
+  const p = document.getElementById("password").value;
+  if (u === "admin" && p === "0000") {
+    loggedIn = true;
+    document.getElementById("loginPanel").classList.add("hidden");
+    document.getElementById("adminPanel").classList.remove("hidden");
+    document.getElementById("loginMessage").textContent = "";
+    render();
+  } else {
+    document.getElementById("loginMessage").textContent = "Log masuk gagal. Sila semak ID dan kata laluan.";
+  }
+}
+
+function logout() {
+  loggedIn = false;
+  document.getElementById("loginPanel").classList.remove("hidden");
+  document.getElementById("adminPanel").classList.add("hidden");
+  document.getElementById("password").value = "";
+  go('utama');
+}
+
+function addTeam() {
+  if (!loggedIn) return;
+  const name = document.getElementById("newTeam").value.trim();
+  const group = document.getElementById("newGroup").value.trim().toUpperCase();
+  if (!name || !group) return showAlert("Sila isi nama pasukan dan kumpulan.");
+  if (data.teams.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+    return showAlert("Nama pasukan ini sudah wujud.");
+  }
+  data.teams.push({id: crypto.randomUUID(), name, group});
+  document.getElementById("newTeam").value = "";
+  document.getElementById("newGroup").value = "";
+  persist();
+  render();
+  showAlert(`Pasukan '${name}' berjaya ditambah ke Kumpulan ${group}.`);
+}
+
+function addMatch() {
+  if (!loggedIn) return;
+  const home = document.getElementById("homeTeam").value;
+  const away = document.getElementById("awayTeam").value;
+  const group = document.getElementById("matchGroup").value.trim().toUpperCase();
+  const date = document.getElementById("matchDate").value;
+  const venue = document.getElementById("matchVenue").value.trim();
+
+  if (!home || !away || home === away || !group || !date) {
+    return showAlert("Sila pilih dua pasukan yang berbeza, serta masukkan kumpulan dan tarikh.");
+  }
+
+  data.matches.push({
+    id: crypto.randomUUID(),
+    home, away, group, date, venue,
+    homeScore: 0, awayScore: 0, minute: 0,
+    status: "Akan Bermula"
+  });
+  persist();
+  render();
+  showAlert("Perlawanan berjaya didaftarkan.");
+}
+
+function loadMatchEditor() {
+  const m = data.matches.find(x => x.id === document.getElementById("editMatch").value);
+  if (!m) {
+    document.getElementById("editHomeScore").value = 0;
+    document.getElementById("editAwayScore").value = 0;
+    document.getElementById("editMinute").value = 0;
+    return;
+  }
+  document.getElementById("editHomeScore").value = m.homeScore;
+  document.getElementById("editAwayScore").value = m.awayScore;
+  document.getElementById("editMinute").value = m.minute || 0;
+  document.getElementById("editStatus").value = m.status;
+}
+
+function saveScore() {
+  if (!loggedIn) return;
+  const matchId = document.getElementById("editMatch").value;
+  const m = data.matches.find(x => x.id === matchId);
+  if (!m) return showAlert("Sila pilih perlawanan terlebih dahulu.");
+  
+  const hs = Number(document.getElementById("editHomeScore").value);
+  const as = Number(document.getElementById("editAwayScore").value);
+  const minute = Number(document.getElementById("editMinute").value || 0);
+  
+  if (![hs, as, minute].every(Number.isInteger) || hs < 0 || as < 0 || minute < 0) {
+    return showAlert("Skor dan minit mestilah nombor bulat yang positif.");
+  }
+  
+  m.homeScore = hs;
+  m.awayScore = as;
+  m.minute = minute;
+  m.status = document.getElementById("editStatus").value;
+  persist();
+  render();
+  showAlert("Kemaskini perlawanan berjaya disimpan.");
+}
+
+function deleteMatch() {
+  if (!loggedIn) return;
+  const id = document.getElementById("editMatch").value;
+  if (!id) return showAlert("Pilih perlawanan terlebih dahulu.");
+  
+  showConfirm("Adakah anda pasti untuk memadam perlawanan ini secara kekal?", () => {
+    data.matches = data.matches.filter(m => m.id !== id);
+    persist();
+    render();
+    showAlert("Perlawanan telah dipadam.");
+  });
+}
+
+function saveAnnouncement() {
+  if (!loggedIn) return;
+  data.announcement = document.getElementById("announcement").value.trim();
+  persist();
+  render();
+  showAlert("Pengumuman awam telah dikemaskini.");
+}
+
+function resetData() {
+  if (!loggedIn) return;
+  showConfirm("AMARAN: Ini akan memadam SEMUA data (Pasukan & Perlawanan) secara kekal dari pelayar ini. Adakah anda pasti?", () => {
+    data = structuredClone(defaultData);
+    persist();
+    render();
+    showAlert("Semua data telah dikosongkan.");
+  });
+}
+
+function exportData() {
+  if (!loggedIn) return;
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `piala-emas-2026-data-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importData(event) {
+  if (!loggedIn) return;
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  showConfirm("Mengimport fail ini akan menggantikan data sedia ada. Teruskan?", () => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const parsed = JSON.parse(reader.result);
+        if (!Array.isArray(parsed.teams) || !Array.isArray(parsed.matches)) {
+          throw new Error("Format tidak sah");
+        }
+        data = parsed;
+        persist();
+        render();
+        showAlert("Data berjaya diimport.");
+      } catch (e) {
+        showAlert("Ralat: Fail JSON tidak sah atau format salah.");
+      }
+      event.target.value = "";
+    };
+    reader.readAsText(file);
+  });
+}
+
+function teamName(id) {
+  return data.teams.find(t => t.id === id)?.name || "Pasukan X";
+}
+
+function fmtDate(date) {
+  if (!date) return "TBD";
+  const d = new Date(date);
+  return isNaN(d) ? esc(date) : d.toLocaleString("ms-MY", {
+    day:"2-digit", month:"short", year:"numeric",
+    hour:"2-digit", minute:"2-digit", hour12: true
+  });
+}
+
+function scoreText(m) {
+  return `${m.homeScore} - ${m.awayScore}`;
+}
+
+function matchCard(m) {
+  const isLive = m.status === "LIVE";
+  const statusBadge = isLive
+    ? `<span class="bg-red-900/40 text-red-400 px-2 py-1 rounded-full text-xs font-bold animate-pulse border border-red-500/30">● LIVE ${m.minute || 0}'</span>`
+    : `<span class="bg-gray-800 text-gray-300 px-2 py-1 rounded-full text-xs">${esc(m.status)}</span>`;
+    
+  return `<article class="glass-panel p-5 rounded-xl border border-lightgreen/30 relative overflow-hidden group">
+    <div class="flex justify-between items-center mb-4 text-xs font-bold tracking-wide">
+      <span class="text-gold bg-gold/10 px-2 py-1 rounded">KUMP. ${esc(m.group)}</span>
+      ${statusBadge}
+    </div>
+    
+    <div class="flex justify-between items-center my-4">
+      <div class="flex-1 text-center font-bold text-sm md:text-base leading-tight px-2">${esc(teamName(m.home))}</div>
+      <div class="bg-appblack border border-lightgreen px-4 py-2 rounded-lg shadow-inner">
+        <span class="text-2xl md:text-3xl font-black ${isLive ? 'text-red-400' : 'text-gold'} whitespace-nowrap">${m.homeScore} - ${m.awayScore}</span>
+      </div>
+      <div class="flex-1 text-center font-bold text-sm md:text-base leading-tight px-2">${esc(teamName(m.away))}</div>
+    </div>
+    
+    <div class="mt-4 pt-4 border-t border-lightgreen/20 text-center text-xs text-muted flex justify-center items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+      ${fmtDate(m.date)} ${m.venue ? `<span class="px-1">•</span> ${esc(m.venue)}` : ""}
+    </div>
+  </article>`;
+}
+
+function renderStandings() {
+  const filter = document.getElementById("groupFilter").value;
+  const groups = filter === "Semua"
+    ? [...new Set(data.teams.map(t => t.group))].sort()
+    : [filter];
+    
+  let rows = [];
+
+  groups.forEach(group => {
+    const teams = data.teams.filter(t => t.group === group);
+    const stats = teams.map(t => ({
+      ...t, p:0, w:0, d:0, l:0, gf:0, ga:0, pts:0
+    }));
+
+    const map = new Map(stats.map(t => [t.id, t]));
+
+    data.matches.filter(m => m.group === group && m.status === "Tamat")
+      .forEach(m => {
+        const h = map.get(m.home), a = map.get(m.away);
+        if (!h || !a) return;
+        h.p++; a.p++;
+        h.gf += m.homeScore; h.ga += m.awayScore;
+        a.gf += m.awayScore; a.ga += m.homeScore;
+        
+        if (m.homeScore > m.awayScore) {
+          h.w++; h.pts += 3; a.l++;
+        } else if (m.homeScore < m.awayScore) {
+          a.w++; a.pts += 3; h.l++;
+        } else {
+          h.d++; a.d++; h.pts++; a.pts++;
+        }
+      });
+
+    // Sort by Points > GD > GF > Name
+    stats.sort((a,b) =>
+      b.pts - a.pts ||
+      (b.gf-b.ga) - (a.gf-a.ga) ||
+      b.gf - a.gf ||
+      a.name.localeCompare(b.name)
+    );
+
+    if (filter === "Semua" && stats.length > 0) {
+      rows.push(`<tr class="bg-darkgreen/50"><td colspan="10" class="p-2 text-left text-gold font-bold text-xs uppercase">KUMPULAN ${esc(group)}</td></tr>`);
+    }
+
+    stats.forEach((t,i) => {
+      const isTopTwo = i < 2 ? "border-l-4 border-l-lightgreen" : "";
+      rows.push(
+      `<tr class="hover:bg-lightgreen/10 transition-colors ${isTopTwo}">
+        <td class="p-3">${i+1}</td>
+        <td class="p-3 text-left font-semibold text-white whitespace-normal">${esc(t.name)}</td>
+        <td class="p-3 text-gray-300">${t.p}</td>
+        <td class="p-3 text-gray-300">${t.w}</td>
+        <td class="p-3 text-gray-300">${t.d}</td>
+        <td class="p-3 text-gray-300">${t.l}</td>
+        <td class="p-3 text-gray-300">${t.gf}</td>
+        <td class="p-3 text-gray-300">${t.ga}</td>
+        <td class="p-3 text-gray-300">${t.gf-t.ga > 0 ? '+'+(t.gf-t.ga) : t.gf-t.ga}</td>
+        <td class="p-3 font-bold text-gold text-base">${t.pts}</td>
+      </tr>`
+    )});
+  });
+
+  document.getElementById("standingsBody").innerHTML =
+    rows.join("") || `<tr><td colspan="10" class="p-8 text-center text-muted">Belum ada data pasukan didaftarkan.</td></tr>`;
+}
+
+function render() {
+  // Update Dashboard
+  document.getElementById("totalMatches").textContent = data.matches.length;
+  document.getElementById("liveCount").textContent = data.matches.filter(m => m.status === "LIVE").length;
+  document.getElementById("teamCount").textContent = data.teams.length;
+
+  // Live Matches
+  const live = data.matches.filter(m => m.status === "LIVE");
+  document.getElementById("liveMatches").innerHTML =
+    live.map(matchCard).join("") ||
+    `<div class="col-span-full glass-panel p-8 text-center text-muted rounded-xl border border-lightgreen/20">Tiada perlawanan sedang berlangsung ketika ini.</div>`;
+
+  // Schedule Table
+  const sorted = [...data.matches].sort((a,b) => new Date(a.date) - new Date(b.date));
+  document.getElementById("scheduleBody").innerHTML =
+    sorted.map(m => `
+    <tr class="hover:bg-lightgreen/10 transition-colors">
+      <td class="p-4 text-gray-300">${fmtDate(m.date)}</td>
+      <td class="p-4 font-semibold text-white whitespace-normal">${esc(teamName(m.home))} <span class="text-muted mx-2">lwn</span> ${esc(teamName(m.away))}</td>
+      <td class="p-4 text-center text-gold">${esc(m.group)}</td>
+      <td class="p-4 text-center font-bold tracking-wider">${scoreText(m)}</td>
+      <td class="p-4 text-center">
+        <span class="px-2 py-1 text-xs rounded-full ${m.status === 'LIVE' ? 'bg-red-900/50 text-red-400' : 'bg-gray-800 text-gray-400'}">${esc(m.status)}</span>
+      </td>
+    </tr>`).join("") ||
+    `<tr><td colspan="5" class="p-8 text-center text-muted">Jadual belum tersedia.</td></tr>`;
+
+  // Finished Matches
+  const finished = data.matches.filter(m => m.status === "Tamat" || m.status === "Ditangguhkan").sort((a,b) => new Date(b.date) - new Date(a.date));
+  document.getElementById("finishedMatches").innerHTML =
+    finished.map(matchCard).join("") ||
+    `<div class="col-span-full glass-panel p-8 text-center text-muted rounded-xl border border-lightgreen/20">Belum ada keputusan perlawanan.</div>`;
+
+  // Standings Filter & Table
+  const gf = document.getElementById("groupFilter");
+  const previous = gf.value;
+  const groups = [...new Set(data.teams.map(t => t.group))].sort();
+  gf.innerHTML = `<option value="Semua">Semua Kumpulan</option>` +
+    groups.map(g => `<option value="${esc(g)}">Kumpulan ${esc(g)}</option>`).join("");
+  if (groups.includes(previous)) gf.value = previous;
+  renderStandings();
+
+  // Admin Selects setup
+  const teamOptions = data.teams.map(t => `<option value="${t.id}">${esc(t.name)} (Kump ${esc(t.group)})</option>`).join("");
+  ["homeTeam","awayTeam"].forEach(id => {
+    const el = document.getElementById(id);
+    const old = el.value;
+    el.innerHTML = `<option value="" disabled selected>Pilih Pasukan</option>` + teamOptions;
+    if (data.teams.some(t => t.id === old)) el.value = old;
+  });
+
+  const edit = document.getElementById("editMatch");
+  const oldMatch = edit.value;
+  edit.innerHTML = `<option value="" disabled selected>-- Sila Pilih Perlawanan --</option>` + 
+    sorted.map(m => `<option value="${m.id}">[${fmtDate(m.date)}] ${esc(teamName(m.home))} lwn ${esc(teamName(m.away))}</option>`).join("");
+  if (data.matches.some(m => m.id === oldMatch)) edit.value = oldMatch;
+  loadMatchEditor();
+
+  // Announcements
+  const annBox = document.getElementById("announcementDisplay");
+  annBox.textContent = data.announcement || "Tiada pengumuman aktif.";
+  document.getElementById("announcement").value = data.announcement || "";
+  
+  const liveSub = document.getElementById("liveSubtitle");
+  liveSub.innerHTML = data.announcement ? 
+    `<span class="text-gold font-bold">Pengumuman:</span> ${esc(data.announcement)}` : 
+    "Keputusan perlawanan yang sedang berlangsung.";
+}
+
+// Initial Call
+go('utama');
+render();
+
+</script>
+</body>
+</html>
